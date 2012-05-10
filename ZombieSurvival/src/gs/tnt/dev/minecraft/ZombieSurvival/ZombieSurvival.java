@@ -14,12 +14,18 @@ public class ZombieSurvival extends JavaPlugin
 {
 	private Logger log;
 	
+	/**
+	 * 
+	 */
 	public void onEnable()
 	{
 		log = this.getLogger();
 		log.info("onEnable()");
 	}
 	
+	/**
+	 * 
+	 */
 	public void onDisable()
 	{
 		log.info("onDisable()");
