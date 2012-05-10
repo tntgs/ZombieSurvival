@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ZombieSurvival" default="makejar" basedir=".">
+  <target name ="makejar" description="Create a jar for the ZombieSurvival project">
+    <jar jarfile="/home/ted/Dev/mc/plugins/ZombieSurvival.jar" includes="**" basedir="bin"/>
+  </target>
+</project>
