@@ -7,30 +7,31 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.bukkit.configuration.MemorySection;
 
 /**
  * @author ted
  *
+ * This class is meant to be a plugin-independent data source.
  */
 public class MySQLDataStore extends DataStore
 {
 	private String ourDSN;
-	private String tablePrefix;
 	private Connection sqlConnection;
 	
 	public byte startup(MemorySection settings)
 	{
 		ourDSN = "jdbc:mysql://" + settings.getString("host") + ":" + settings.getString("port")+ "/" + settings.getString("db");
-		tablePrefix = settings.getString("tablenameprefix");
+		//tablePrefix = settings.getString("tablenameprefix");
 		
 		/*
 		 * Establish (persistent) SQL connection to server
 		 */
 		try
 		{
-			sqlConnection = DriverManager.getConnection(ourDSN, settings.getString("user"), settings.getString("pass"));
+			this.sqlConnection = DriverManager.getConnection(ourDSN, settings.getString("user"), settings.getString("pass"));
 		}
 		catch (Exception e)
 		{
@@ -107,6 +108,31 @@ public class MySQLDataStore extends DataStore
 		*/
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
+	public int getTableCount()
+	{
+		int rowCount = -1;
+		
+		try
+		{			
+			ResultSet rsShowTables = executeQuery("SHOW TABLES");
+			
+			rowCount = this.getRowCountFromRS(rsShowTables);
+			
+			rsShowTables.close();
+		}
+		catch (Exception e)
+		{
+			System.out.println(e.toString());
+			return -1; // Return code 2 indicates a database validation error
+		}
+		
+		return rowCount;
+	}
+	
 	public byte shutdown()
 	{
 		try
@@ -137,7 +163,6 @@ public class MySQLDataStore extends DataStore
 	 * @param szQuery The SQL query to execute
 	 * @return the ResultSet containing the results
 	 */
-	@SuppressWarnings("unused")
 	private ResultSet executeQuery(String szQuery)
 	{
 		try
@@ -160,7 +185,6 @@ public class MySQLDataStore extends DataStore
 	 * @param rs The ResultSet that was returned from an execute() call
 	 * @return The number of rows that the result contains
 	 */
-	@SuppressWarnings({ "finally", "unused" })
 	private int getRowCountFromRS(ResultSet rs)
 	{
 		int rowCount = -1;
@@ -188,9 +212,375 @@ public class MySQLDataStore extends DataStore
 		{
 			System.out.println(e.toString());
 		}
-		finally
+
+		return rowCount;
+	}
+	
+	/**
+	 * 
+	 * @param tableName The name of the table to check for
+	 * @return 0 if table exists, 1 if it doesn't exist, less than 0 indicates an underlying error
+	 */
+	public byte checkIfTableExists(String tableName)
+	{
+		try
 		{
+			if (this.sqlConnection.isValid(1) == false)
+			{
+				// Connection is invalid for some reason or another
+				return -1;
+			}			
+		}
+		catch (SQLException e)
+		{
+			// SQLException was thrown when attempting to check SQL connection
+			return -2;
+		}
+		
+		PreparedStatement ourQuery;
+		try
+		{
+			ourQuery = this.sqlConnection.prepareStatement("SHOW TABLES LIKE \"" + tableName + "\"");
+		}
+		catch (SQLException e)
+		{
+			System.out.println(e.toString());
+			// SQLException was thrown when attempting to prepare a SQL statement
+			return -3;
+		}
+		
+		try
+		{
+			if (ourQuery.execute() == true)
+			{
+				// Success
+				switch (this.getRowCountFromRS(ourQuery.getResultSet()))
+				{
+					case 0:
+						try
+						{
+							ourQuery.close();
+						}
+						catch (SQLException e)
+						{
+							// We'll ignore this, although we will alert the user
+							System.out.println(e.toString());
+						}
+						return 1;
+						
+					case 1:
+						try
+						{
+							ourQuery.close();
+						}
+						catch (SQLException e)
+						{
+							// We'll ignore this, although we will alert the user
+							System.out.println(e.toString());
+						}
+						return 0;
+						
+					default:
+						try
+						{
+							ourQuery.close();
+						}
+						catch (SQLException ee)
+						{
+							// Fudgepacker!!
+							System.out.println(ee.toString());
+						}
+							
+						// We got an odd number of results
+						return -5;
+				}
+			}
+			else
+			{
+				// Non-Success
+				try
+				{
+					ourQuery.close();
+				}
+				catch (SQLException e)
+				{
+					// We'll ignore this, although we will alert the user
+					System.out.println(e.toString());
+				}
+				return -6;
+			}
+		}
+		catch (SQLException e)
+		{
+			System.out.println(e.toString());
+			
+			try
+			{
+				ourQuery.close();
+			}
+			catch (SQLException ee)
+			{
+				// Fudgepacker!!
+				System.out.println(ee.toString());
+			}
+			
+			// SQLException thrown when executing our query
+			return -4;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param sqlQuery
+	 * @return
+	 */
+	public byte execute(String sqlQuery)
+	{
+		try
+		{
+			if (this.sqlConnection.isValid(1) == false)
+			{
+				// Connection is invalid for some reason or another
+				return 1;
+			}			
+		}
+		catch (SQLException e)
+		{
+			// SQLException was thrown when attempting to check SQL connection
+			return 2;
+		}
+		
+		PreparedStatement ourQuery;
+		try
+		{
+			ourQuery = this.sqlConnection.prepareStatement(sqlQuery);
+		}
+		catch (SQLException e)
+		{
+			System.out.println(e.toString());
+			// SQLException was thrown when attempting to prepare a SQL statement
+			return 3;			
+		}
+		
+		try
+		{
+			if (ourQuery.execute() == true)
+			{
+				// Success
+				try
+				{
+					ourQuery.close();
+				}
+				catch (SQLException e)
+				{
+					// We'll ignore this, although we will alert the user
+					System.out.println(e.toString());
+				}
+				return 0;
+			}
+			else
+			{
+				// Non-Success
+				try
+				{
+					ourQuery.close();
+				}
+				catch (SQLException e)
+				{
+					// We'll ignore this, although we will alert the user
+					System.out.println(e.toString());
+				}
+				return -1;
+			}
+		}
+		catch (SQLException e)
+		{
+			System.out.println(e.toString());
+			
+			try
+			{
+				ourQuery.close();
+			}
+			catch (SQLException ee)
+			{
+				// Fudgepacker!!
+				System.out.println(ee.toString());
+			}
+			
+			// SQLException thrown when executing our query
+			return 4;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param sqlQuery
+	 * @return
+	 */
+	public int executeAndReturnRowCount(String sqlQuery)
+	{
+		int rowCount = -1;
+		
+		try
+		{
+			if (this.sqlConnection.isValid(1) == false)
+			{
+				// Connection is invalid for some reason or another
+				return -1;
+			}			
+		}
+		catch (SQLException e)
+		{
+			// SQLException was thrown when attempting to check SQL connection
+			return -2;
+		}
+		
+		PreparedStatement ourQuery;
+		try
+		{
+			ourQuery = this.sqlConnection.prepareStatement(sqlQuery);
+		}
+		catch (SQLException e)
+		{
+			System.out.println(e.toString() + "\n" +  e.getStackTrace().toString());
+			// SQLException was thrown when attempting to prepare a SQL statement
+			return -3;
+		}
+		
+		try
+		{
+			ourQuery.execute();
+			
+			rowCount = this.getRowCountFromRS(ourQuery.getResultSet());
+				
+			if (rowCount < 0)
+			{
+				try
+				{
+					ourQuery.close();
+				}
+				catch (SQLException e)
+				{
+					// We'll ignore this, although we will alert the user
+					System.out.println(e.toString() + "\n" +  e.getStackTrace().toString());
+				}
+				return -4;
+			}
+			
+			try
+			{
+				ourQuery.close();
+			}
+			catch (SQLException e)
+			{
+				// We'll ignore this, although we will alert the user
+				System.out.println(e.toString() + "\n" +  e.getStackTrace().toString());
+			}
+			
 			return rowCount;
 		}
+		catch (SQLException e)
+		{
+			System.out.println(e.toString() + "\n" +  e.getStackTrace().toString());
+			
+			try
+			{
+				ourQuery.close();
+			}
+			catch (SQLException ee)
+			{
+				// Fudgepacker!!
+				System.out.println(ee.toString() + "\n" +  ee.getStackTrace().toString());
+			}
+			
+			// SQLException thrown when executing our query
+			return -5;
+		}
+	}
+	
+	public int fetchIntFromQuery(String sqlQuery) throws Exception
+	{
+		int rowCount = -1;
+		int result = -1;
+		
+		try
+		{
+			if (this.sqlConnection.isValid(1) == false)
+			{
+				// Connection is invalid for some reason or another
+				throw new InvalidStateException("SQL connection is not valid");
+			}			
+		}
+		catch (SQLException e)
+		{
+			// SQLException was thrown when attempting to check SQL connection
+			throw e;
+		}
+		
+		PreparedStatement ourQuery;
+		try
+		{
+			ourQuery = this.sqlConnection.prepareStatement(sqlQuery);
+		}
+		catch (SQLException e)
+		{
+			// SQLException was thrown when attempting to prepare a SQL statement
+			throw e;
+		}
+		
+		try
+		{
+			ourQuery.execute();
+			ResultSet ourRS = ourQuery.getResultSet();
+			rowCount = this.getRowCountFromRS(ourRS);
+
+			switch (rowCount)
+			{
+				case 0:
+					result = 0;
+					break;
+					
+				case 1:
+					ourRS.first();
+					result = ourRS.getInt(1);
+					break;
+					
+				default:
+					break;
+					
+			}
+			
+			try
+			{
+				ourQuery.close();
+			}
+			catch (SQLException e)
+			{
+				// We'll ignore this, although we will alert the user
+				System.out.println(e.toString() + "\n" +  e.getStackTrace().toString());
+			}
+			
+			return result;
+		}
+		catch (SQLException e)
+		{
+			System.out.println(e.toString());
+			
+			try
+			{
+				ourQuery.close();
+			}
+			catch (SQLException ee)
+			{
+				// Fudgepacker!!
+				System.out.println(ee.toString() + "\n" +  ee.getStackTrace().toString());
+			}
+			
+			// SQLException thrown when executing our query
+			throw e;
+		}
+		
+		
+		
 	}
 }

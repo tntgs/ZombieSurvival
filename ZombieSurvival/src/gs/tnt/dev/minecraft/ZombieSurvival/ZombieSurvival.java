@@ -3,15 +3,16 @@
  */
 package gs.tnt.dev.minecraft.ZombieSurvival;
 
-import gs.tnt.dev.minecraft.data.DataStore;
-import gs.tnt.dev.minecraft.data.MySQLDataStore;
+import gs.tnt.dev.minecraft.ZombieSurvival.data.Datastore;
+import gs.tnt.dev.minecraft.ZombieSurvival.data.MysqlDatastore;
+//import gs.tnt.dev.minecraft.data.MySQLDataStore;
 
 import java.util.logging.Logger;
 import java.util.List;
 import org.bukkit.Server;
 import org.bukkit.World;
-import org.bukkit.configuration.MemorySection;
-import org.bukkit.configuration.file.FileConfiguration;
+//import org.bukkit.configuration.MemorySection;
+//import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 //import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
@@ -22,23 +23,23 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class ZombieSurvival extends JavaPlugin
 {
+	private Boolean isEnabled = false;
 	private Logger log;
 	private Server server;
-	private DataStore ds;
+	private Datastore ds;
 	
 	/**
 	 * 
 	 */
 	public void onEnable()
 	{
-		byte result = 0;
+		//byte result = 0;
 		
 		/*
 		 * These variables will be used persistently throughout the lifetime of this plug-in.
 		 */
 		log = this.getLogger();
 		server = this.getServer();
-		ds = new MySQLDataStore();
 		
 		/*
 		 * Populate configuration with some default settings
@@ -49,7 +50,9 @@ public class ZombieSurvival extends JavaPlugin
 		this.getConfig().addDefault("mysql.user", "user");
 		this.getConfig().addDefault("mysql.pass", "pass");
 		this.getConfig().addDefault("mysql.db", "db");
-		this.getConfig().addDefault("mysql.tablenameprefix", "za_");
+		this.getConfig().addDefault("mysql.tablenameprefix", "zs_");
+		this.getConfig().addDefault("flatfile.path", "data.yml");
+		this.getConfig().addDefault("sqlite.path", "data.db");
 		
 		/*
 		 * This code below will create a default config.yml file is one hasn't been created yet
@@ -60,17 +63,23 @@ public class ZombieSurvival extends JavaPlugin
 		
 		/*
 		 * Load desired datastore format from config.yml file
+		 *   and then initialize that data connection ...
 		 */
-		MemorySection dsSettings;
 		String dsFormat = this.getConfig().getString("datastore.format");
-		
 		if (dsFormat.compareToIgnoreCase("MYSQL") == 0) 
 		{
-			ds = new MySQLDataStore();
-			dsSettings = (MemorySection) this.getConfig().get("mysql");
+			try
+			{
+				ds = new MysqlDatastore(this);
+			}
+			catch (Exception e)
+			{
+				this.getLogger().severe(e.toString());
+				return;
+			}
 		}
 		else if (dsFormat.compareToIgnoreCase("FLAT") == 0|| dsFormat.compareToIgnoreCase("FLATFILE") == 0)
-		{		
+		{
 			log.severe("Flatfile data storage is not supported at this time.");
 			return;
 		}
@@ -86,21 +95,6 @@ public class ZombieSurvival extends JavaPlugin
 		}
 		
 		/*
-		 * and then initialize that data connection...
-		 */
-		result = ds.startup(dsSettings);
-		switch (result)
-		{
-			case 0:		// Successful initialization
-				log.info("Datastore connection established");
-				break;
-				
-			default:	// Other than 0 indicates an unsuccessful initialization
-				log.info("Could not initialize datastore connection !!");
-				return;
-		}
-		
-		/*
 		 * Testing code
 		 */
 		log.info("Enumerating loaded worlds ...");
@@ -109,9 +103,27 @@ public class ZombieSurvival extends JavaPlugin
 		List<World> worlds = server.getWorlds();
 		for (int x = 1; x <= worlds.size(); x++)
 		{
-			thisWorld = worlds.get(x-1);
-			log.info("world: <" + thisWorld.getName() + "> type: " + thisWorld.getEnvironment().toString() + " monsters:<" + thisWorld.getAllowMonsters() + "> animals:<" + thisWorld.getAllowAnimals() + "> difficulty:<" + thisWorld.getDifficulty().toString() + "> maxY:<" + thisWorld.getMaxHeight() + "> PVP:<" + thisWorld.getPVP() + ">");
+			thisWorld = worlds.get(x - 1);
+			
+			Boolean thisWorldEnabled = false;
+			String thisWorldName = thisWorld.getName();
+			if (this.ds.isWorldAdded(thisWorldName) == false)
+			{
+				thisWorldEnabled = false;
+				this.ds.addWorld(thisWorldName, thisWorldEnabled);
+			}
+			else
+			{
+				thisWorldEnabled = this.ds.isWorldEnabled(thisWorldName);
+			}
+			
+			log.info("world: <" + thisWorldName + "> type: " + thisWorld.getEnvironment().toString() + " monsters:<" + thisWorld.getAllowMonsters() + "> animals:<" + thisWorld.getAllowAnimals() + "> difficulty:<" + thisWorld.getDifficulty().toString() + "> maxY:<" + thisWorld.getMaxHeight() + "> PVP:<" + thisWorld.getPVP() + "> enabled:<" + thisWorldEnabled + ">");
 		}
+		
+		/*
+		 * Enable our plugin (allow all other functions to work)
+		 */
+		this.isEnabled = true;
 	}
 	
 	/**
@@ -120,5 +132,6 @@ public class ZombieSurvival extends JavaPlugin
 	public void onDisable()
 	{
 		log.info("onDisable()");
+		this.isEnabled = false;
 	}
 }
