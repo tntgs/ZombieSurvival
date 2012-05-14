@@ -23,4 +23,6 @@ public abstract class Datastore
 	public abstract Boolean removeWorld(String worldName);
 	public abstract Boolean enableWorld(String worldName);
 	public abstract Boolean disableWorld(String worldName);
+	public abstract int getZombieLimitByWorld(String worldName);
+	public abstract Boolean setZombieLimitForWorld(String worldName, int iNewLimit);
 }

@@ -98,6 +98,7 @@ public class MySQLDataStore extends DataStore
 			 	CREATE TABLE `za_worlds` (
   					`worldName` varchar(255) NOT NULL,
   					`zaEnabled` tinyint(1) NOT NULL DEFAULT '0',
+  					`zaZombieLimit` smallint(6) NOT NULL DEFAULT '2000',
   					PRIMARY KEY (`worldName`)
 				) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 			 *

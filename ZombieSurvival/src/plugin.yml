@@ -1,4 +1,13 @@
 name: ZombieSurvival
 main: gs.tnt.dev.minecraft.ZombieSurvival.ZombieSurvival
-version: 0.1.0.0
+version: 0.1.1.0
 author: TNT
+commands:
+   zs:
+      description: Generic ZombieSurvival command
+      usage: /zs [section] [subcommand] [parameters]
+   zswi:
+      description: Returns ZS-specific world information for given parameter
+      usage: /zswi [world]
+      permission: zombiesurvival.world.info
+      permission-message: You lack the zombiesurvival.world.info permission

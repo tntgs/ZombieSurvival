@@ -67,7 +67,7 @@ public class MysqlDatastore extends Datastore
 				break;
 				
 			case 1:
-				result = this.sqlDS.execute("CREATE TABLE `zs_worlds` (\n`worldName` varchar(255) NOT NULL,\n`zsEnabled` tinyint(1) NOT NULL DEFAULT '0',\nPRIMARY KEY (`worldName`)\n) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
+				result = this.sqlDS.execute("CREATE TABLE `zs_worlds` (\n`worldName` varchar(255) NOT NULL,\n`zsEnabled` tinyint(1) NOT NULL DEFAULT '0',\n`zaZombieLimit` smallint(6) NOT NULL DEFAULT '2000',\nPRIMARY KEY (`worldName`)\n) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
 				switch (result)
 				{
 					case -1:
@@ -106,7 +106,7 @@ public class MysqlDatastore extends Datastore
 		byte result;
 		if (isEnabled == true) { bEnabled = "1"; } else { bEnabled = "0"; }
 		
-		result = this.sqlDS.execute("INSERT INTO `" + this.sqlTablePrefix + "worlds` (`worldName`, `zsEnabled`) VALUES ('" + worldName + "', '" + bEnabled + "')");
+		result = this.sqlDS.execute("INSERT INTO `" + this.sqlTablePrefix + "worlds` (`worldName`, `zsEnabled`, `zsZombieLimit`) VALUES ('" + worldName + "', '" + bEnabled + "', '2000')");
 		
 		System.out.println("fdas:" + result);
 		return false;
@@ -162,5 +162,15 @@ public class MysqlDatastore extends Datastore
 			System.out.println("Exception at isWorldEnabled(\"" + worldName + "\"): " + e.toString());
 			return false;
 		}
+	}
+	
+	public int getZombieLimitByWorld(String worldName)
+	{
+		return 2000;
+	}
+	
+	public Boolean setZombieLimitForWorld(String worldName, int iNewLimit)
+	{
+		return false;
 	}
 }
