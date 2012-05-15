@@ -22,6 +22,7 @@ public class ZSWorld
 	private String		zsWorldName;
 	private Boolean		zsWorldEnabled;
 	private short		zsZombieLimit;
+	private short		zsSpiderLimit;
 	private short		zsEntityLimit;
 	private World		zsWorld;
 	
@@ -34,6 +35,7 @@ public class ZSWorld
 		this.zsWorldName = "";
 		this.zsWorldEnabled = false;
 		this.zsZombieLimit = Variables.defaultPerWorldZombieLimit;
+		this.zsZombieLimit = Variables.defaultPerWorldSpiderLimit;
 		this.zsEntityLimit = Variables.defaultPerWorldEntityLimit;
 	}
 	
@@ -217,6 +219,15 @@ public class ZSWorld
 	 * 
 	 * @return
 	 */
+	public short getSpiderLimit()
+	{
+		return this.zsSpiderLimit;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public short getEntityLimit()
 	{
 		return this.zsEntityLimit;
@@ -254,7 +265,25 @@ public class ZSWorld
 	 * 
 	 * @return
 	 */
+	public Boolean getCowsAllowed()
+	{
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public Boolean getPigsAllowed()
+	{
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Boolean getPigZombiesAllowed()
 	{
 		return true;
 	}
@@ -302,6 +331,15 @@ public class ZSWorld
 	public Boolean getPVPEnabled()
 	{
 		return this.zsWorld.getPVP();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Boolean getZombiesBurnInDaylight()
+	{
+		return true;
 	}
 	
 	/**
