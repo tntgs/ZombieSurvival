@@ -8,11 +8,17 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityCombustEvent;
+import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
+//import org.bukkit.event.entity.EntityDamageEvent;
 //import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -465,6 +471,205 @@ public class ZSWorldEntityListener implements Listener
 			 */
 			evt.setCancelled(true);
 			return;
+		}
+	}
+	
+	/*@EventHandler(priority = EventPriority.HIGH)
+	public void onEntityDamage(EntityDamageEvent evt)
+	{
+		Entity entity = evt.getEntity();
+		World world = entity.getWorld();
+		ZSWorld zsWorld = this.ourWorldManager.findZSWorld(world);
+		
+		/*
+		 * Check if this world is ZombieSurvival enabled in configuration
+		 *
+		if (zsWorld.getWorldEnabled() == false)
+		{
+			// This world is disabled as far as ZombieSurvival is concerned
+			// We really don't care what happens here.
+			return;
+		}
+		
+		/*
+		 * Enumerate the entity type
+		 *
+		EntityType thisEntityType = evt.getEntity().getType();
+		switch (thisEntityType)
+		{
+			/*case BLAZE:
+				break;
+				
+			case CAVE_SPIDER:
+				break;
+				
+			case COW:
+				break;*
+		
+			//case ZOMBIE:
+				//break;
+				
+			default:
+				System.out.println("Unhandled EntityDamageEvent on <" + zsWorld.getWorldName() + "> <" + entity.toString() + "> <" + thisEntityType.toString() + "> CAUSE:" + evt.getCause().toString() + " DMG:" + evt.getDamage());
+				break;
+		}
+	}*/
+	
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onEntityCombust(EntityCombustEvent evt)
+	{
+		Entity entity = evt.getEntity();
+		World world = entity.getWorld();
+		ZSWorld zsWorld = this.ourWorldManager.findZSWorld(world);
+		
+		/*
+		 * Check if this world is ZombieSurvival enabled in configuration
+		 */
+		if (zsWorld.getWorldEnabled() == false)
+		{
+			// This world is disabled as far as ZombieSurvival is concerned
+			// We really don't care what happens here.
+			return;
+		}
+		
+		/*
+		 * Enumerate the entity type
+		 */
+		EntityType thisEntityType = evt.getEntity().getType();
+		switch (thisEntityType)
+		{
+			/*case BLAZE:
+				break;
+				
+			case CAVE_SPIDER:
+				break;
+				
+			case COW:
+				break;*/
+		
+			case PIG_ZOMBIE:
+				/*
+				 * Pig zombies do not combust in sunlight.
+				 */
+				evt.setCancelled(true);
+		
+			case ZOMBIE:
+				/*
+				 * Zombies do not combust in sunlight.
+				 *    At the time this code was initially written, this function did not affect the entity being set ablaze by flint&steel.
+				 */
+				evt.setCancelled(true);
+				break;
+				
+			default:
+				//System.out.println("Unhandled EntityCombustEvent on <" + zsWorld.getWorldName() + "> <" + entity.toString() + "> <" + thisEntityType.toString() + ">");
+				break;
+		}
+		
+		
+	}
+	
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onEntityTarget(EntityTargetEvent evt)
+	{
+		Entity entity = evt.getEntity();
+		World world = entity.getWorld();
+		ZSWorld zsWorld = this.ourWorldManager.findZSWorld(world);
+		
+		/*
+		 * Check if this world is ZombieSurvival enabled in configuration
+		 */
+		if (zsWorld.getWorldEnabled() == false)
+		{
+			// This world is disabled as far as ZombieSurvival is concerned
+			// We really don't care what happens here.
+			return;
+		}
+		
+		/*
+		 * Enumerate the entity type
+		 */
+		EntityType thisEntityType = evt.getEntity().getType();
+		switch (thisEntityType)
+		{
+			default:
+				String consoleOutput = "Unhandled EntityTargetEvent on <" + zsWorld.getWorldName() + "> <" + thisEntityType.toString() + ">";
+				
+				TargetReason entityTargetReason = evt.getReason();
+				Entity entityTarget = evt.getTarget();
+				if (entityTarget != null)
+				{
+					EntityType entityTargetType = entityTarget.getType();
+					if (entityTargetType != null)
+					{
+						consoleOutput += " -> " + entityTargetType.toString();						
+					}
+					else
+					{
+						consoleOutput += " -> {" + entityTarget.toString() + "}";
+					}
+					
+				}
+				if (entityTargetReason != null)
+				{
+					consoleOutput += " (" + entityTargetReason.toString() + ")";
+				}
+				
+				System.out.println(consoleOutput);
+				break;
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onEntityTargetLivingEntity(EntityTargetLivingEntityEvent evt)
+	{
+		Entity entity = evt.getEntity();
+		World world = entity.getWorld();
+		ZSWorld zsWorld = this.ourWorldManager.findZSWorld(world);
+		
+		/*
+		 * Check if this world is ZombieSurvival enabled in configuration
+		 */
+		if (zsWorld.getWorldEnabled() == false)
+		{
+			// This world is disabled as far as ZombieSurvival is concerned
+			// We really don't care what happens here.
+			return;
+		}
+		
+		/*
+		 * Enumerate the entity type
+		 */
+		EntityType thisEntityType = evt.getEntity().getType();
+		switch (thisEntityType)
+		{
+			default:
+				String consoleOutput = "Unhandled EntityTargetLivingEntityEvent on <" + zsWorld.getWorldName() + "> <" + thisEntityType.toString() + ">";
+				
+				TargetReason entityTargetReason = evt.getReason();
+				LivingEntity entityTarget = evt.getTarget();
+				if (entityTarget != null)
+				{
+					EntityType entityTargetType = entityTarget.getType();
+					if (entityTargetType != null)
+					{
+						consoleOutput += " -> " + entityTargetType.toString();						
+					}
+					else
+					{
+						consoleOutput += " -> {" + entityTarget.toString() + "}";
+					}
+					
+					//entityTarget.
+					
+				}
+				if (entityTargetReason != null)
+				{
+					consoleOutput += " (" + entityTargetReason.toString() + ")";
+				}
+				
+				System.out.println(consoleOutput);
+				break;
 		}
 	}
 }

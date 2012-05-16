@@ -10,11 +10,11 @@ package gs.tnt.dev.minecraft.ZombieSurvival;
 public final class Variables
 {
 	public static final String pluginName = "ZombieSurvival";
-	public static final String pluginVersion = "0.1.2.1";
+	public static final String pluginVersion = "0.1.3.0";
 	public static final byte pluginVersionMajor = 0;
 	public static final byte pluginVersionMinor = 1;
-	public static final byte pluginVersionBuild = 2;
-	public static final byte pluginVersionRevision = 1;
+	public static final byte pluginVersionBuild = 3;
+	public static final byte pluginVersionRevision = 0;
 	
 	public static final short defaultPerWorldEntityLimit = 2000;
 	public static final short defaultPerWorldZombieLimit = 25;

@@ -6,21 +6,14 @@ package gs.tnt.dev.minecraft.ZombieSurvival;
 import gs.tnt.dev.minecraft.ZombieSurvival.commands.ZSWorldInfoCommand;
 import gs.tnt.dev.minecraft.ZombieSurvival.data.Datastore;
 import gs.tnt.dev.minecraft.ZombieSurvival.data.MysqlDatastore;
-//import gs.tnt.dev.minecraft.ZombieSurvival.world.ZSWorld;
+import gs.tnt.dev.minecraft.ZombieSurvival.routine.ZSTaskManager;
 import gs.tnt.dev.minecraft.ZombieSurvival.world.ZSWorldManager;
-//import gs.tnt.dev.minecraft.data.MySQLDataStore;
-//import java.util.HashMap;
-//import java.util.Map;
 import java.util.logging.Logger;
-//import java.util.List;
-//import org.bukkit.Server;
-//import org.bukkit.World;
-//import org.bukkit.configuration.MemorySection;
-//import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-//import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
 //import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
 
@@ -32,9 +25,10 @@ public class ZombieSurvival extends JavaPlugin
 {
 	private Boolean isEnabled = false;
 	private Logger log;
-	//private Server server;
+	private Server server;
 	private Datastore ds;
 	private ZSWorldManager worlds;
+	private ZSTaskManager tasks;
 	
 	/**
 	 * 
@@ -47,7 +41,7 @@ public class ZombieSurvival extends JavaPlugin
 		 * These variables will be used persistently throughout the lifetime of this plug-in.
 		 */
 		log = this.getLogger();
-		//server = this.getServer();
+		server = this.getServer();
 		
 		/*
 		 * Populate configuration with some default settings
@@ -82,6 +76,7 @@ public class ZombieSurvival extends JavaPlugin
 			}
 			catch (Exception e)
 			{
+				this.ds = null;
 				this.getLogger().severe(e.toString());
 				return;
 			}
@@ -108,6 +103,32 @@ public class ZombieSurvival extends JavaPlugin
 		worlds = new ZSWorldManager(this);
 		
 		/*
+		 * Schedule a task to periodically enumerate all monsters in ZS-enabled worlds
+		 * and check to see what they are doing (and modify their behavior to make it
+		 * consistent with the gameplay that this plugin demands)
+		 * 
+		 * (to be cleaned up later)
+		 */
+		this.tasks = new ZSTaskManager(this);
+		if (this.tasks.startup() == true)
+		{
+			log.info("ZSTaskManager has started successfully.");
+		}
+		else
+		{
+			log.severe("ZSTaskManager startup encountered an error.");
+			
+			this.isEnabled = false;
+			this.tasks = null;
+			this.worlds = null;
+			this.ds.shutdown();
+			
+			return;
+		}
+		//BukkitScheduler scheduler = server.getScheduler();
+		//scheduler.scheduleSyncRepeatingTask(this, new ZSTaskMonsterTargeting(this), 120, 30);
+		
+		/*
 		 * Enable our plugin (allow all other functions to work)
 		 */
 		this.isEnabled = true;
@@ -125,6 +146,17 @@ public class ZombieSurvival extends JavaPlugin
 		else
 		{
 			log.info("onDisable()");
+			
+			this.tasks.stop();
+			this.tasks = null;
+			
+			BukkitScheduler scheduler = server.getScheduler();
+			scheduler.cancelTasks(this);
+			
+			this.worlds = null;
+			
+			this.ds.shutdown();
+			this.ds = null;
 			
 			this.isEnabled = false;
 		}
@@ -217,5 +249,14 @@ public class ZombieSurvival extends JavaPlugin
 	public Datastore getDS()
 	{
 		return this.ds;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public ZSWorldManager getWorldManager()
+	{
+		return this.worlds;
 	}
 }
