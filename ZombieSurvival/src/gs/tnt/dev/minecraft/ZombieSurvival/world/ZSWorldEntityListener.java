@@ -3,8 +3,6 @@
  */
 package gs.tnt.dev.minecraft.ZombieSurvival.world;
 
-import java.util.Map;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -69,11 +67,66 @@ public class ZSWorldEntityListener implements Listener
 					
 					switch (entitySpawnedFromEgg)
 					{
+						case COW:
+							/* This player is attempting to spawn a cow using a spawning egg item */
+							if (zsWorld.getCowsAllowed() == false)
+							{
+								player.sendMessage(ChatColor.DARK_RED + "Cow spawning is prohibited on this world.");
+								return;
+							}
+							
+							/* Cows permitted on world, check if limit has been reached */
+							if (zsWorld.getEntityCount(EntityType.COW) >= zsWorld.getCowLimit())
+							{
+								player.sendMessage(ChatColor.GOLD + "Cow limit of " + zsWorld.getCowLimit() + " for this world has been reached.");
+								return;
+							}
+							break;
+							
 						case SPIDER:
 							/* This player is attempting to spawn a spider using a spawning egg item */
 							if (zsWorld.getSpidersAllowed() == false)
 							{
 								player.sendMessage(ChatColor.DARK_RED + "Spider spawning is prohibited on this world.");
+								return;
+							}
+							
+							/* Spiders permitted on world, check if limit has been reached */
+							if (zsWorld.getEntityCount(EntityType.SPIDER) >= zsWorld.getSpiderLimit())
+							{
+								player.sendMessage(ChatColor.GOLD + "Spider limit of " + zsWorld.getSpiderLimit() + " for this world has been reached.");
+								return;
+							}
+							break;
+							
+						case VILLAGER:
+							/* This player is attempting to spawn a villager using a spawning egg item */
+							if (zsWorld.getVillagersAllowed() == false)
+							{
+								player.sendMessage(ChatColor.DARK_RED + "Villager spawning is prohibited on this world.");
+								return;
+							}
+							
+							/* Villagers permitted on world, check if limit has been reached */
+							if (zsWorld.getEntityCount(EntityType.VILLAGER) >= zsWorld.getVillagerLimit())
+							{
+								player.sendMessage(ChatColor.GOLD + "Villager limit of " + zsWorld.getVillagerLimit() + " for this world has been reached.");
+								return;
+							}
+							break;
+							
+						case WOLF:
+							/* This player is attempting to spawn a wolf using a spawning egg item */
+							if (zsWorld.getWolvesAllowed() == false)
+							{
+								player.sendMessage(ChatColor.DARK_RED + "Wolf spawning is prohibited on this world.");
+								return;
+							}
+							
+							/* Wolves permitted on world, check if limit has been reached */
+							if (zsWorld.getEntityCount(EntityType.WOLF) >= zsWorld.getWolfLimit())
+							{
+								player.sendMessage(ChatColor.GOLD + "Wolf limit of " + zsWorld.getWolfLimit() + " for this world has been reached.");
 								return;
 							}
 							break;
@@ -87,19 +140,11 @@ public class ZSWorldEntityListener implements Listener
 							}
 							
 							/* Zombies permitted on world, check if limit has been reached */
-							Map<EntityType, Integer> entityCountMap = zsWorld.getEntityCount();
-							if (entityCountMap.containsKey(EntityType.ZOMBIE) == true)
+							if (zsWorld.getEntityCount(EntityType.ZOMBIE) >= zsWorld.getZombieLimit())
 							{
-								String zombieCount = "0";
-								zombieCount = (String) Integer.toString(entityCountMap.get(EntityType.ZOMBIE));
-								short iZombieCount = Short.parseShort(zombieCount);
-							
-								if (iZombieCount >= zsWorld.getZombieLimit())
-								{
-									/* Inform user that their spawn action will fail */
-									player.sendMessage(ChatColor.GOLD + "Zombie limit of " + zsWorld.getZombieLimit() + " for this world has been reached.");
-									return;
-								}
+								/* Inform user that their spawn action will fail */
+								player.sendMessage(ChatColor.GOLD + "Zombie limit of " + zsWorld.getZombieLimit() + " for this world has been reached.");
+								return;
 							}
 							break;
 					}
@@ -150,6 +195,14 @@ public class ZSWorldEntityListener implements Listener
 					/*
 					 * Cows are allowed
 					 */
+					if (zsWorld.getEntityCount(EntityType.COW) >= zsWorld.getCowLimit())
+					{
+						/*
+						 * Deny this spawn event because we have reached our per-world cow limit.
+						 */
+						evt.setCancelled(true);
+						return;
+					}
 				}
 				else
 				{
@@ -210,17 +263,50 @@ public class ZSWorldEntityListener implements Listener
 			case IRON_GOLEM:
 				break;
 				
-			case PIG:
-				if (zsWorld.getSkeletonsAllowed() == true)
+			case OCELOT:
+				if (zsWorld.getOcelotAllowed() == true)
 				{
 					/*
-					 * Skeletons are allowed
+					 * Ocelot are allowed
 					 */
+					if (zsWorld.getEntityCount(EntityType.OCELOT) >= zsWorld.getOcelotLimit())
+					{
+						/*
+						 * Deny this spawn event because we have reached our per-world ocelot limit.
+						 */
+						evt.setCancelled(true);
+						return;
+					}
 				}
 				else
 				{
 					/*
-					 * Skeletons are not allowed, block this spawn event.
+					 * Ocelot are not allowed
+					 */
+					evt.setCancelled(true);
+					return;
+				}
+				break;
+				
+			case PIG:
+				if (zsWorld.getPigsAllowed() == true)
+				{
+					/*
+					 * Pigs are allowed
+					 */
+					/*if (zsWorld.getEntityCount(EntityType.PIG) >= zsWorld.getPigLimit())
+					{
+						/*
+						 * Deny this spawn event because we have reached our per-world pig limit.
+						 *
+						evt.setCancelled(true);
+						return;
+					}*/
+				}
+				else
+				{
+					/*
+					 * Pigs are not allowed, block this spawn event.
 					 */
 					evt.setCancelled(true);
 					return;
@@ -233,6 +319,14 @@ public class ZSWorldEntityListener implements Listener
 					/*
 					 * Pig zombies are allowed
 					 */
+					if (zsWorld.getEntityCount(EntityType.PIG_ZOMBIE) >= zsWorld.getPigZombieLimit())
+					{
+						/*
+						 * Deny this spawn event because we have reached our per-world pig zombie limit.
+						 */
+						evt.setCancelled(true);
+						return;
+					}
 				}
 				else
 				{
@@ -250,6 +344,14 @@ public class ZSWorldEntityListener implements Listener
 					/*
 					 * Sheep are allowed
 					 */
+					if (zsWorld.getEntityCount(EntityType.SHEEP) >= zsWorld.getSheepLimit())
+					{
+						/*
+						 * Deny this spawn event because we have reached our per-world sheep limit.
+						 */
+						evt.setCancelled(true);
+						return;
+					}
 				}
 				else
 				{
@@ -270,6 +372,14 @@ public class ZSWorldEntityListener implements Listener
 					/*
 					 * Skeletons are allowed
 					 */
+					if (zsWorld.getEntityCount(EntityType.SKELETON) >= zsWorld.getSkeletonLimit())
+					{
+						/*
+						 * Deny this spawn event because we have reached our per-world skeleton limit.
+						 */
+						evt.setCancelled(true);
+						return;
+					}
 				}
 				else
 				{
@@ -290,22 +400,13 @@ public class ZSWorldEntityListener implements Listener
 					/*
 					 * Spiders are allowed
 					 */
-					/* Zombies permitted on world, check if limit has been reached */
-					Map<EntityType, Integer> entityCountMap = zsWorld.getEntityCount();
-					if (entityCountMap.containsKey(EntityType.SPIDER) == true)
+					if (zsWorld.getEntityCount(EntityType.SPIDER) >= zsWorld.getSpiderLimit())
 					{
-						String spiderCount = "0";
-						spiderCount = (String) Integer.toString(entityCountMap.get(EntityType.SPIDER));
-						short iSpiderCount = Short.parseShort(spiderCount);
-					
-						if (iSpiderCount >= zsWorld.getSpiderLimit())
-						{
-							/*
-							 * Deny this spawn event because we have reached our per-world spider limit.
-							 */
-							evt.setCancelled(true);
-							return;
-						}
+						/*
+						 * Deny this spawn event because we have reached our per-world spider limit.
+						 */
+						evt.setCancelled(true);
+						return;
 					}
 				}
 				else
@@ -333,22 +434,10 @@ public class ZSWorldEntityListener implements Listener
 					/*
 					 * Zombies are allowed
 					 */
-					Map<EntityType, Integer> entityCountMap = zsWorld.getEntityCount();
-					
-					if (entityCountMap.containsKey(EntityType.ZOMBIE) == true)
+					if (zsWorld.getEntityCount(EntityType.ZOMBIE) >= zsWorld.getZombieLimit())
 					{
-						String zombieCount = "0";
-						zombieCount = (String) Integer.toString(entityCountMap.get(EntityType.ZOMBIE));
-						short iZombieCount = Short.parseShort(zombieCount);
-					
-						if (iZombieCount >= zsWorld.getZombieLimit())
-						{
-							/*
-							 * Deny this spawn event because we have reached our per-world zombie limit.
-							 */
-							evt.setCancelled(true);
-							return;
-						}
+						evt.setCancelled(true);
+						return;
 					}
 				}
 				else

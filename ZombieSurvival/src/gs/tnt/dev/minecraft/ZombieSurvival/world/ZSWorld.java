@@ -23,6 +23,14 @@ public class ZSWorld
 	private Boolean		zsWorldEnabled;
 	private short		zsZombieLimit;
 	private short		zsSpiderLimit;
+	private short		zsCowLimit;
+	private short		zsVillagerLimit;
+	private short		zsSheepLimit;
+	private short		zsOcelotLimit;
+	private short		zsSquidLimit;
+	private short		zsWolfLimit;
+	private short		zsSkeletonLimit;
+	private short		zsPigZombieLimit;
 	private short		zsEntityLimit;
 	private World		zsWorld;
 	
@@ -34,9 +42,17 @@ public class ZSWorld
 		this.zsWorld = null;
 		this.zsWorldName = "";
 		this.zsWorldEnabled = false;
-		this.zsZombieLimit = Variables.defaultPerWorldZombieLimit;
-		this.zsZombieLimit = Variables.defaultPerWorldSpiderLimit;
+		this.zsCowLimit = Variables.defaultPerWorldCowLimit;
 		this.zsEntityLimit = Variables.defaultPerWorldEntityLimit;
+		this.zsOcelotLimit = Variables.defaultPerWorldOcelotLimit;
+		this.zsPigZombieLimit = Variables.defaultPerWorldPigZombieLimit;
+		this.zsSheepLimit = Variables.defaultPerWorldSheepLimit;
+		this.zsSkeletonLimit = Variables.defaultPerWorldSkeletonLimit;
+		this.zsSpiderLimit = Variables.defaultPerWorldSpiderLimit;
+		this.zsSquidLimit = Variables.defaultPerWorldSquidLimit;
+		this.zsVillagerLimit = Variables.defaultPerWorldVillagerLimit;
+		this.zsWolfLimit = Variables.defaultPerWorldWolfLimit;
+		this.zsZombieLimit = Variables.defaultPerWorldZombieLimit;
 	}
 	
 	/**
@@ -48,8 +64,17 @@ public class ZSWorld
 		this.zsWorld = thisWorld;
 		this.zsWorldName = thisWorld.getName();
 		this.zsWorldEnabled = false;
-		this.zsZombieLimit = Variables.defaultPerWorldZombieLimit;
+		this.zsCowLimit = Variables.defaultPerWorldCowLimit;
 		this.zsEntityLimit = Variables.defaultPerWorldEntityLimit;
+		this.zsOcelotLimit = Variables.defaultPerWorldOcelotLimit;
+		this.zsPigZombieLimit = Variables.defaultPerWorldPigZombieLimit;
+		this.zsSheepLimit = Variables.defaultPerWorldSheepLimit;
+		this.zsSkeletonLimit = Variables.defaultPerWorldSkeletonLimit;
+		this.zsSpiderLimit = Variables.defaultPerWorldSpiderLimit;
+		this.zsSquidLimit = Variables.defaultPerWorldSquidLimit;
+		this.zsVillagerLimit = Variables.defaultPerWorldVillagerLimit;
+		this.zsWolfLimit = Variables.defaultPerWorldWolfLimit;
+		this.zsZombieLimit = Variables.defaultPerWorldZombieLimit;
 	}
 	
 	/**
@@ -60,8 +85,17 @@ public class ZSWorld
 	{
 		this.zsWorldName = worldName;
 		this.zsWorldEnabled = false;
-		this.zsZombieLimit = Variables.defaultPerWorldZombieLimit;
+		this.zsCowLimit = Variables.defaultPerWorldCowLimit;
 		this.zsEntityLimit = Variables.defaultPerWorldEntityLimit;
+		this.zsOcelotLimit = Variables.defaultPerWorldOcelotLimit;
+		this.zsPigZombieLimit = Variables.defaultPerWorldPigZombieLimit;
+		this.zsSheepLimit = Variables.defaultPerWorldSheepLimit;
+		this.zsSkeletonLimit = Variables.defaultPerWorldSkeletonLimit;
+		this.zsSpiderLimit = Variables.defaultPerWorldSpiderLimit;
+		this.zsSquidLimit = Variables.defaultPerWorldSquidLimit;
+		this.zsVillagerLimit = Variables.defaultPerWorldVillagerLimit;
+		this.zsWolfLimit = Variables.defaultPerWorldWolfLimit;
+		this.zsZombieLimit = Variables.defaultPerWorldZombieLimit;
 	}
 	
 	/**
@@ -73,8 +107,17 @@ public class ZSWorld
 	{
 		this.zsWorldName = worldName;
 		this.zsWorldEnabled = bEnabled;
-		this.zsZombieLimit = Variables.defaultPerWorldZombieLimit;
+		this.zsCowLimit = Variables.defaultPerWorldCowLimit;
 		this.zsEntityLimit = Variables.defaultPerWorldEntityLimit;
+		this.zsOcelotLimit = Variables.defaultPerWorldOcelotLimit;
+		this.zsPigZombieLimit = Variables.defaultPerWorldPigZombieLimit;
+		this.zsSheepLimit = Variables.defaultPerWorldSheepLimit;
+		this.zsSkeletonLimit = Variables.defaultPerWorldSkeletonLimit;
+		this.zsSpiderLimit = Variables.defaultPerWorldSpiderLimit;
+		this.zsSquidLimit = Variables.defaultPerWorldSquidLimit;
+		this.zsVillagerLimit = Variables.defaultPerWorldVillagerLimit;
+		this.zsWolfLimit = Variables.defaultPerWorldWolfLimit;
+		this.zsZombieLimit = Variables.defaultPerWorldZombieLimit;
 	}
 	
 	/**
@@ -88,6 +131,16 @@ public class ZSWorld
 		this.zsWorldName = worldName;
 		this.zsWorldEnabled = bEnabled;
 		this.zsZombieLimit = iZombieLimit;
+		this.zsCowLimit = Variables.defaultPerWorldCowLimit;
+		this.zsEntityLimit = Variables.defaultPerWorldEntityLimit;
+		this.zsOcelotLimit = Variables.defaultPerWorldOcelotLimit;
+		this.zsPigZombieLimit = Variables.defaultPerWorldPigZombieLimit;
+		this.zsSheepLimit = Variables.defaultPerWorldSheepLimit;
+		this.zsSkeletonLimit = Variables.defaultPerWorldSkeletonLimit;
+		this.zsSpiderLimit = Variables.defaultPerWorldSpiderLimit;
+		this.zsSquidLimit = Variables.defaultPerWorldSquidLimit;
+		this.zsVillagerLimit = Variables.defaultPerWorldVillagerLimit;
+		this.zsWolfLimit = Variables.defaultPerWorldWolfLimit;
 	}
 	
 	/**
@@ -101,8 +154,17 @@ public class ZSWorld
 	{
 		this.zsWorldName = worldName;
 		this.zsWorldEnabled = bEnabled;
-		this.zsZombieLimit = iZombieLimit;
-		this.zsEntityLimit = iEntityLimit;
+		this.zsCowLimit = Variables.defaultPerWorldCowLimit;
+		this.zsEntityLimit = Variables.defaultPerWorldEntityLimit;
+		this.zsOcelotLimit = Variables.defaultPerWorldOcelotLimit;
+		this.zsPigZombieLimit = Variables.defaultPerWorldPigZombieLimit;
+		this.zsSheepLimit = Variables.defaultPerWorldSheepLimit;
+		this.zsSkeletonLimit = Variables.defaultPerWorldSkeletonLimit;
+		this.zsSpiderLimit = Variables.defaultPerWorldSpiderLimit;
+		this.zsSquidLimit = Variables.defaultPerWorldSquidLimit;
+		this.zsVillagerLimit = Variables.defaultPerWorldVillagerLimit;
+		this.zsWolfLimit = Variables.defaultPerWorldWolfLimit;
+		this.zsZombieLimit = Variables.defaultPerWorldZombieLimit;
 	}
 	
 	/**
@@ -116,8 +178,17 @@ public class ZSWorld
 		this.zsWorld = thisWorld;
 		this.zsWorldName = worldName;
 		this.zsWorldEnabled = bEnabled;
-		this.zsZombieLimit = Variables.defaultPerWorldZombieLimit;
+		this.zsCowLimit = Variables.defaultPerWorldCowLimit;
 		this.zsEntityLimit = Variables.defaultPerWorldEntityLimit;
+		this.zsOcelotLimit = Variables.defaultPerWorldOcelotLimit;
+		this.zsPigZombieLimit = Variables.defaultPerWorldPigZombieLimit;
+		this.zsSheepLimit = Variables.defaultPerWorldSheepLimit;
+		this.zsSkeletonLimit = Variables.defaultPerWorldSkeletonLimit;
+		this.zsSpiderLimit = Variables.defaultPerWorldSpiderLimit;
+		this.zsSquidLimit = Variables.defaultPerWorldSquidLimit;
+		this.zsVillagerLimit = Variables.defaultPerWorldVillagerLimit;
+		this.zsWolfLimit = Variables.defaultPerWorldWolfLimit;
+		this.zsZombieLimit = Variables.defaultPerWorldZombieLimit;
 	}
 	
 	/**
@@ -133,7 +204,16 @@ public class ZSWorld
 		this.zsWorldName = worldName;
 		this.zsWorldEnabled = bEnabled;
 		this.zsZombieLimit = iZombieLimit;
+		this.zsCowLimit = Variables.defaultPerWorldCowLimit;
 		this.zsEntityLimit = Variables.defaultPerWorldEntityLimit;
+		this.zsOcelotLimit = Variables.defaultPerWorldOcelotLimit;
+		this.zsPigZombieLimit = Variables.defaultPerWorldPigZombieLimit;
+		this.zsSheepLimit = Variables.defaultPerWorldSheepLimit;
+		this.zsSkeletonLimit = Variables.defaultPerWorldSkeletonLimit;
+		this.zsSpiderLimit = Variables.defaultPerWorldSpiderLimit;
+		this.zsSquidLimit = Variables.defaultPerWorldSquidLimit;
+		this.zsVillagerLimit = Variables.defaultPerWorldVillagerLimit;
+		this.zsWolfLimit = Variables.defaultPerWorldWolfLimit;
 	}
 	
 	/**
@@ -228,6 +308,203 @@ public class ZSWorld
 	 * 
 	 * @return
 	 */
+	public short getCowLimit()
+	{
+		return this.zsCowLimit;
+	}
+	
+	/**
+	 * 
+	 * @param iNewLimit
+	 */
+	public void setCowLimit(short iNewLimit)
+	{
+		// Acceptable range for Cow limit is 0 <= x <= infinity
+		if (iNewLimit < 0)
+		{
+			this.zsCowLimit = 0;
+		}
+		else
+		{
+			this.zsCowLimit = iNewLimit;	
+		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public short getPigZombieLimit()
+	{
+		return this.zsPigZombieLimit;
+	}
+	
+	/**
+	 * 
+	 * @param iNewLimit
+	 */
+	public void setPigZombieLimit(short iNewLimit)
+	{
+		// Acceptable range for Pig Zombie limit is 0 <= x <= infinity
+		if (iNewLimit < 0)
+		{
+			this.zsPigZombieLimit = 0;
+		}
+		else
+		{
+			this.zsPigZombieLimit = iNewLimit;	
+		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public short getSheepLimit()
+	{
+		return this.zsSheepLimit;
+	}
+	
+	/**
+	 * 
+	 * @param iNewLimit
+	 */
+	public void setSheepLimit(short iNewLimit)
+	{
+		// Acceptable range for Sheep limit is 0 <= x <= infinity
+		if (iNewLimit < 0)
+		{
+			this.zsSheepLimit = 0;
+		}
+		else
+		{
+			this.zsSheepLimit = iNewLimit;	
+		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public short getSquidLimit()
+	{
+		return this.zsSquidLimit;
+	}
+	
+	public void setSquidLimit(short iNewLimit)
+	{
+		// Acceptable range for Squid limit is 0 <= x <= infinity
+		if (iNewLimit < 0)
+		{
+			this.zsSquidLimit = 0;
+		}
+		else
+		{
+			this.zsSquidLimit = iNewLimit;	
+		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public short getSkeletonLimit()
+	{
+		return this.zsSkeletonLimit;
+	}
+	
+	public void setSkeletonLimit(short iNewLimit)
+	{
+		// Acceptable range for Skeleton limit is 0 <= x <= infinity
+		if (iNewLimit < 0)
+		{
+			this.zsSkeletonLimit = 0;
+		}
+		else
+		{
+			this.zsSkeletonLimit = iNewLimit;	
+		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public short getVillagerLimit()
+	{
+		return this.zsVillagerLimit;
+	}
+	
+	public void setVillagerLimit(short iNewLimit)
+	{
+		// Acceptable range for Villager limit is 0 <= x <= infinity
+		if (iNewLimit < 0)
+		{
+			this.zsVillagerLimit = 0;
+		}
+		else
+		{
+			this.zsVillagerLimit = iNewLimit;	
+		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public short getWolfLimit()
+	{
+		return this.zsWolfLimit;
+	}
+	
+	public void setWolfLimit(short iNewLimit)
+	{
+		// Acceptable range for Wolf limit is 0 <= x <= infinity
+		if (iNewLimit < 0)
+		{
+			this.zsWolfLimit = 0;
+		}
+		else
+		{
+			this.zsWolfLimit = iNewLimit;	
+		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public short getOcelotLimit()
+	{
+		return this.zsOcelotLimit;
+	}
+	
+	public void setOcelotLimit(short iNewLimit)
+	{
+		// Acceptable range for Ocelot limit is 0 <= x <= infinity
+		if (iNewLimit < 0)
+		{
+			this.zsOcelotLimit = 0;
+		}
+		else
+		{
+			this.zsOcelotLimit = iNewLimit;	
+		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Boolean getOcelotAllowed()
+	{
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public short getEntityLimit()
 	{
 		return this.zsEntityLimit;
@@ -266,6 +543,24 @@ public class ZSWorld
 	 * @return
 	 */
 	public Boolean getCowsAllowed()
+	{
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Boolean getWolvesAllowed()
+	{
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Boolean getVillagersAllowed()
 	{
 		return true;
 	}
@@ -383,6 +678,31 @@ public class ZSWorld
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	public short getEntityCount(EntityType entity)
+	{
+		List<Entity> worldEntities = zsWorld.getEntities();
+		Entity thisEntity;
+		EntityType thisEntityType;
+		short count = 0;
+		
+		for (int x = 1; x <= worldEntities.size(); x++)
+		{
+			thisEntity = worldEntities.get(x - 1);
+			thisEntityType = thisEntity.getType();
+			
+			if (thisEntityType.equals(entity))
+			{
+				count++;
+			}
+		}
+		return count;
 	}
 	
 	//
